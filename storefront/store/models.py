@@ -14,9 +14,10 @@ class Collection(models.Model):
 
 class Product(models.Model):
     title = models.CharField(max_length=255)
+    slug = models.SlugField()
     description = models.TextField()
-    price = models.DecimalField(max_digits=6, decimal_places=2)
-    inventory = models.CharField()
+    unit_price = models.DecimalField(max_digits=6, decimal_places=2)
+    inventory = models.CharField(max_length=255)
     last_update = models.DateTimeField(auto_now=True)
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
     promotions = models.ManyToManyField(Promotion)
@@ -36,6 +37,8 @@ class Customer(models.Model):
     phone = models.IntegerField()
     birth_date = models.DateField(null=True)
     membership = models.CharField(max_length=1, choices=MEMBERSHIP_CHOICE, default=MEMBERSHIP_BRONZE)
+
+    
 
 
 class Order(models.Model):
@@ -63,11 +66,12 @@ class Address(models.Model):
     # customer = models.OneToOneField(Customer, on_delete=models.CASCADE, primary_key=True)
     customer = models.ForeignKey( #onetomany
         Customer, on_delete=models.CASCADE)
+    zip = models.CharField(max_length=10)
     
 
 
 class Cart(models.Model):
-    user = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart,on_delete=models.CASCADE)
